@@ -1,0 +1,35 @@
+{
+  "name": "typekoa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "nodemon dist/server.js",
+    "build": "npm run tslint && npm run build-ts",
+    "build-ts": "tsc",
+    "watch": "npm run tslint && npm run watch-ts",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/koa": "^2.0.46",
+    "@types/koa-router": "^7.0.30",
+    "@types/mysql": "^2.15.5",
+    "@types/sequelize": "^4.27.24",
+    "mysql2": "^1.5.3",
+    "nodemon": "^1.18.3",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "mysql": "^2.16.0",
+    "sequelize": "^4.38.0"
+  }
+}

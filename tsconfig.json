@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2017",
+        "noImplicitAny": false,
+        "experimentalDecorators": true, //配置可以使用装饰器
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",  // TS文件编译后会放入到此文件夹内
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "node_modules/*",
+                "src/types/*"
+            ]
+        }
+    },
+    "include": [
+        "app/**/*",
+        "server.ts"
+    ]
+}
