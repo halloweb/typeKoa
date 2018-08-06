@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = {
     db: {
-        database: 'test',
+        database: 'koa',
         userName: 'root',
         passWord: 'root',
         host: 'localhost',

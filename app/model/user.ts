@@ -1,14 +1,17 @@
 import * as Sequelize from 'sequelize'
 import sequelize from '../db/mysql'
-const  User = sequelize.define('user', {
-    id: {
-        type: Sequelize.BIGINT(50),
+const  User: any = sequelize.define('student', {
+    sid: {
+        type: Sequelize.BIGINT(11),
         primaryKey: true,
         autoIncrement: true
     },
-    name: Sequelize.STRING(100),
-    age: Sequelize.STRING(50)
+    sname: Sequelize.STRING(11),
+    sex: Sequelize.STRING(10),
+    sdept: Sequelize.STRING(20),
+    sage: Sequelize.STRING(11)
 }, {
+    freezeTableName: true,
     timestamps: false
 })
 class UInfo {
@@ -24,7 +27,7 @@ class UInfo {
     try {
             const result = await User.findAll({
                 order: [
-                    ['id', 'DESC']
+                    ['sid', 'DESC']
                 ]
             });
             return result;

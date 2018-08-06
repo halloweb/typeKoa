@@ -10,8 +10,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const decorators_1 = require("../router/decorators");
+const user_1 = require("../model/user");
 let default_1 = class default_1 {
-    index(id) {
+    async index(id) {
+        let result;
+        let info = {
+            sname: '小红',
+            sex: '女',
+            sdept: '信息',
+            sage: '18'
+        };
+        try {
+            result = await user_1.default.add(info);
+        }
+        catch (err) {
+            console.log('ss');
+        }
         return {
             code: 200,
             id,
