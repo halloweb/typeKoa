@@ -2,11 +2,16 @@ import * as Koa from 'koa'
 import * as Router from 'koa-router'
 import * as compose from 'koa-compose'
 import * as bodyParse from 'koa-bodyparser'
+import * as session from 'koa-session'
+import * as koaStatic from 'koa-static'
+import * as koaViews from 'koa-views'
+import { log_date } from './util/log'
+import * as path from 'path'
+import proxy from './middle/proxy'
 import './controllers'
 import { routerList, controllerList, paramList, parseList } from './router/decorators'
 
 const routers: any[] = []
-
 // 遍历所有添加了装饰器的Class，并创建对应的Router对象
 routerList.forEach(item => {
     const { basename, constrcutor } = item
@@ -79,8 +84,10 @@ routerList.forEach(item => {
 
                     // 调用实际的函数，处理业务逻辑
                     try {
-                        const results = await controller.controller(...args)
-                        ctx.body = results
+                        const results = await controller.controller(...args, ctx, next)
+                        if (results) {
+                            ctx.body = results
+                        }
                     } catch (err) {
                         console.log(err)
                     }
@@ -92,8 +99,40 @@ routerList.forEach(item => {
 })
 
 const app = new Koa()
-
+app.on('error', function(err) {
+    console.log('logging error ', err.message);
+    console.log(err);
+  });
+app.keys = ['jia mi a']
+const sessionConfig = {
+    key: 'koa:sess',
+    maxAge: 3600,
+    overwrite: true,
+    httpOnly: true,
+    signed: true,
+    rolling: false,
+    renew: false
+}
+app.use(session(sessionConfig, app));
+// 模板配置
+app.use(koaViews(path.join(__dirname, '/view'), {
+    extension: 'ejs'
+}));
+app.use(koaStatic(__dirname + './public'));
+// 请求体解析
 app.use(bodyParse())
+// 请求转发
+app.use(async (ctx, next) => {
+    if (ctx.path === '/favicon.ico') return;
+    if (!ctx.session.user && ctx.path !== '/login') {
+         ctx.redirect('/login')
+    } else {
+        const startDate: any = new Date()
+        await next()
+        const endDate: any = new Date()
+        log_date.info(`${ctx.status}  ${ctx.method}  ${ctx.path}  ${endDate - startDate}ms`  );
+    }
+})
+app.use(proxy({'/api': ' https://cnodejs.org'}))
 app.use(compose(routers))
-
 export default app

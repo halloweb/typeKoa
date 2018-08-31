@@ -40,16 +40,16 @@ let default_1 = class default_1 {
     }
 };
 __decorate([
-    decorators_1.Get('/'),
+    decorators_1.Get(''),
     __param(0, decorators_1.Parse('number')), __param(0, decorators_1.Query('id'))
 ], default_1.prototype, "index", null);
 __decorate([
-    decorators_1.Post('/detail'),
+    decorators_1.Post('/info'),
     __param(0, decorators_1.Parse('number')), __param(0, decorators_1.Query('id')),
     __param(1, decorators_1.Parse('number')), __param(1, decorators_1.Body('age'))
 ], default_1.prototype, "detail", null);
 default_1 = __decorate([
-    decorators_1.Router('')
+    decorators_1.Router('/detail')
 ], default_1);
 exports.default = default_1;
 //# sourceMappingURL=detail.js.map

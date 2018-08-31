@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run serve",
-    "serve": "nodemon dist/server.js",
+    "start": "npm run server",
+    "server": "nodemon dist/server.js",
     "build": "npm run tslint && npm run build-ts",
     "build-ts": "tsc",
     "watch": "npm run tslint && npm run watch-ts",
@@ -26,10 +26,18 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
+    "@types/ejs": "^2.6.0",
+    "@types/koa-views": "^2.0.3",
+    "@types/log4js": "^2.3.5",
+    "ejs": "^2.6.1",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "koa-session": "^5.8.3",
+    "koa-views": "^6.1.4",
+    "log4js": "^3.0.5",
     "mysql": "^2.16.0",
+    "request": "^2.88.0",
     "sequelize": "^4.38.0"
   }
 }

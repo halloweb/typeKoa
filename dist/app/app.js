@@ -4,6 +4,12 @@ const Koa = require("koa");
 const Router = require("koa-router");
 const compose = require("koa-compose");
 const bodyParse = require("koa-bodyparser");
+const session = require("koa-session");
+const koaStatic = require("koa-static");
+const koaViews = require("koa-views");
+const log_1 = require("./util/log");
+const path = require("path");
+const proxy_1 = require("./middle/proxy");
 require("./controllers");
 const decorators_1 = require("./router/decorators");
 const routers = [];
@@ -64,8 +70,10 @@ decorators_1.routerList.forEach(item => {
             });
             // 调用实际的函数，处理业务逻辑
             try {
-                const results = await controller.controller(...args);
-                ctx.body = results;
+                const results = await controller.controller(...args, ctx, next);
+                if (results) {
+                    ctx.body = results;
+                }
             }
             catch (err) {
                 console.log(err);
@@ -75,7 +83,43 @@ decorators_1.routerList.forEach(item => {
     routers.push(router.routes());
 });
 const app = new Koa();
+app.on('error', function (err) {
+    console.log('logging error ', err.message);
+    console.log(err);
+});
+app.keys = ['jia mi a'];
+const sessionConfig = {
+    key: 'koa:sess',
+    maxAge: 3600,
+    overwrite: true,
+    httpOnly: true,
+    signed: true,
+    rolling: false,
+    renew: false
+};
+app.use(session(sessionConfig, app));
+// 模板配置
+app.use(koaViews(path.join(__dirname, '/view'), {
+    extension: 'ejs'
+}));
+app.use(koaStatic(__dirname + './public'));
+// 请求体解析
 app.use(bodyParse());
+// 请求转发
+app.use(async (ctx, next) => {
+    if (ctx.path === '/favicon.ico')
+        return;
+    if (!ctx.session.user && ctx.path !== '/login') {
+        ctx.redirect('/login');
+    }
+    else {
+        const startDate = new Date();
+        await next();
+        const endDate = new Date();
+        log_1.log_date.info(`${ctx.status}  ${ctx.method}  ${ctx.path}  ${endDate - startDate}ms`);
+    }
+});
+app.use(proxy_1.default({ '/api': ' https://cnodejs.org' }));
 app.use(compose(routers));
 exports.default = app;
 //# sourceMappingURL=app.js.map

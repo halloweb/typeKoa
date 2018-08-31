@@ -1,8 +1,8 @@
 import { Router, Get, Query, Parse, Body, Post } from '../router/decorators'
 import UInfo from '../model/user'
-@Router('')
+@Router('/detail')
 export default class {
-  @Get('/')
+  @Get('')
   async index (@Parse('number') @Query('id') id: number) {
     let result: any;
     let info = {
@@ -23,7 +23,7 @@ export default class {
     }
   }
 
-  @Post('/detail')
+  @Post('/info')
   detail (
     @Parse('number') @Query('id') id: number,
     @Parse('number') @Body('age') age: number

@@ -10,46 +10,50 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const decorators_1 = require("../router/decorators");
-const user_1 = require("../model/user");
 let default_1 = class default_1 {
-    async index(id) {
-        let result;
-        try {
-            result = await user_1.default.query();
-        }
-        catch (err) {
-            console.log(err);
-        }
+    async index(ctx) {
+        await ctx.render('index');
+    }
+    async enter(ctx) {
+        await ctx.render('login', { title: '登录' });
+    }
+    async login(data, ctx, next) {
+        ctx.session.user = data;
         return {
             code: 200,
-            id: result,
-            type: typeof id
+            id: '1',
+            info: data
         };
     }
     async about(id) {
         let result;
-        try {
-            result = await user_1.default.add({
-                name: 'hallo',
-                age: id
-            });
-        }
-        catch (err) {
-            console.log(err);
-        }
+        // try {
+        //   result = await UInfo.add({
+        //     name: 'hallo',
+        //     age: id
+        //   })
+        // } catch (err) {
+        //   console.log(err)
+        // }
         return {
             code: 200,
-            id: result,
+            id: 'result',
             type: typeof id
         };
     }
 };
 __decorate([
-    decorators_1.Get('/'),
-    __param(0, decorators_1.Parse('number')), __param(0, decorators_1.Query('id'))
+    decorators_1.Get('')
 ], default_1.prototype, "index", null);
 __decorate([
-    decorators_1.Get('/about/:id'),
+    decorators_1.Get('/login')
+], default_1.prototype, "enter", null);
+__decorate([
+    decorators_1.Post('/login'),
+    __param(0, decorators_1.Param('')('data'))
+], default_1.prototype, "login", null);
+__decorate([
+    decorators_1.Get('/api/v1/topics'),
     __param(0, decorators_1.Parse('string')), __param(0, decorators_1.Params('id'))
 ], default_1.prototype, "about", null);
 default_1 = __decorate([
