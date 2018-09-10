@@ -63,14 +63,18 @@ const proxy =  (opts) => async (ctx, next) => {
        ctx.response.set({
            'content-type': s['response'].headers['content-type']
        })
-        const fileName = ctx.path.replace(/\//g, '_')
-        const fileUrl = path.join(__dirname, `../static/${fileName}.json`)
-        const str = JSON.stringify(JSON.parse(s['reqBody']), null, 2);
-        // tslint:disable-next-line:no-null-keyword
-        fs.writeFileSync( fileUrl , str, {encoding: 'utf-8'})
-        ctx.set('Content-disposition', 'attachment; filename=' + fileName + '.json');
-        ctx.body =  fs.createReadStream(fileUrl)
+        // const fileName = ctx.path.replace(/\//g, '_')
+        // const fileUrl = path.join(__dirname, `../static/${fileName}.json`)
+        // const str = JSON.stringify(JSON.parse(s['reqBody']), null, 2);
+        // // tslint:disable-next-line:no-null-keyword
+        // fs.writeFileSync( fileUrl , str, {encoding: 'utf-8'})
+        // ctx.set('Content-disposition', 'attachment; filename=' + fileName + '.json');
+        // ctx.body =  fs.createReadStream(fileUrl)
         // fs.unlink(fileUrl, () => {})
+
+        // ctx.set('Content-disposition', 'attachment; filename=data.json');
+        // ctx.set('Content-type', 'application/octet-stream')
+        ctx.body = s['reqBody']
     }
 }
 function requ (options) {

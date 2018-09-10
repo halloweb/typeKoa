@@ -99,40 +99,47 @@ routerList.forEach(item => {
 })
 
 const app = new Koa()
-app.on('error', function(err) {
-    console.log('logging error ', err.message);
-    console.log(err);
+app.on('error', (err, ctx) => {
+    log_date.error( err.message )
   });
 app.keys = ['jia mi a']
 const sessionConfig = {
     key: 'koa:sess',
-    maxAge: 3600,
+    maxAge: 86400000, // 单位为ms
     overwrite: true,
     httpOnly: true,
     signed: true,
     rolling: false,
     renew: false
 }
-app.use(session(sessionConfig, app));
+app.use(session(sessionConfig, app))
 // 模板配置
 app.use(koaViews(path.join(__dirname, '/view'), {
     extension: 'ejs'
 }));
-app.use(koaStatic(__dirname + './public'));
 // 请求体解析
 app.use(bodyParse())
 // 请求转发
 app.use(async (ctx, next) => {
     if (ctx.path === '/favicon.ico') return;
+    console.log(ctx.session.user)
     if (!ctx.session.user && ctx.path !== '/login') {
          ctx.redirect('/login')
     } else {
+        console.log(ctx.path)
         const startDate: any = new Date()
+
+        const reg = /\.[jpg|gif|png|js]/i
+        if (reg.test(ctx.path)) {
+            console.log('aa')
+          ctx.set('Cache-Control', 'maxAge=86400000')
+        }
         await next()
         const endDate: any = new Date()
         log_date.info(`${ctx.status}  ${ctx.method}  ${ctx.path}  ${endDate - startDate}ms`  );
     }
 })
+app.use(koaStatic(path.join(__dirname , './public')))
 app.use(proxy({'/api': ' https://cnodejs.org'}))
 app.use(compose(routers))
 export default app
