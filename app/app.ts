@@ -120,25 +120,25 @@ app.use(koaViews(path.join(__dirname, '/view'), {
 // 请求体解析
 app.use(bodyParse())
 // 请求转发
-app.use(async (ctx, next) => {
-    if (ctx.path === '/favicon.ico') return;
-    console.log(ctx.session.user)
-    if (!ctx.session.user && ctx.path !== '/login') {
-         ctx.redirect('/login')
-    } else {
-        console.log(ctx.path)
-        const startDate: any = new Date()
+// app.use(async (ctx, next) => {
+//     if (ctx.path === '/favicon.ico') return;
+//     console.log(ctx.session.user)
+//     if (!ctx.session.user && ctx.path !== '/login') {
+//          ctx.redirect('/login')
+//     } else {
+//         console.log(ctx.path)
+//         const startDate: any = new Date()
 
-        const reg = /\.[jpg|gif|png|js]/i
-        if (reg.test(ctx.path)) {
-            console.log('aa')
-          ctx.set('Cache-Control', 'maxAge=86400000')
-        }
-        await next()
-        const endDate: any = new Date()
-        log_date.info(`${ctx.status}  ${ctx.method}  ${ctx.path}  ${endDate - startDate}ms`  );
-    }
-})
+//         const reg = /\.[jpg|gif|png|js]/i
+//         if (reg.test(ctx.path)) {
+//             console.log('aa')
+//           ctx.set('Cache-Control', 'maxAge=86400000')
+//         }
+//         await next()
+//         const endDate: any = new Date()
+//         log_date.info(`${ctx.status}  ${ctx.method}  ${ctx.path}  ${endDate - startDate}ms`  );
+//     }
+// })
 app.use(koaStatic(path.join(__dirname , './public')))
 app.use(proxy({'/api': ' https://cnodejs.org'}))
 app.use(compose(routers))
