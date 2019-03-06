@@ -27,9 +27,11 @@
   },
   "dependencies": {
     "@types/ejs": "^2.6.0",
+    "@types/ioredis": "^4.0.9",
     "@types/koa-views": "^2.0.3",
     "@types/log4js": "^2.3.5",
     "ejs": "^2.6.1",
+    "ioredis": "^4.6.2",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",

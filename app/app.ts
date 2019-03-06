@@ -2,11 +2,12 @@ import * as Koa from 'koa'
 import * as Router from 'koa-router'
 import * as compose from 'koa-compose'
 import * as bodyParse from 'koa-bodyparser'
-import * as session from 'koa-session'
+import * as session from 'koa-session2'
 import * as koaStatic from 'koa-static'
 import * as koaViews from 'koa-views'
 import { log_date } from './util/log'
 import * as path from 'path'
+import { RedisStore } from './db/redis'
 import proxy from './middle/proxy'
 import './controllers'
 import { routerList, controllerList, paramList, parseList } from './router/decorators'
@@ -103,16 +104,9 @@ app.on('error', (err, ctx) => {
     log_date.error( err.message )
   });
 app.keys = ['jia mi a']
-const sessionConfig = {
-    key: 'koa:sess',
-    maxAge: 86400000, // 单位为ms
-    overwrite: true,
-    httpOnly: true,
-    signed: true,
-    rolling: false,
-    renew: false
-}
-app.use(session(sessionConfig, app))
+app.use(session({
+    store: new RedisStore()
+}))
 // 模板配置
 app.use(koaViews(path.join(__dirname, '/view'), {
     extension: 'ejs'

@@ -4,11 +4,12 @@ const Koa = require("koa");
 const Router = require("koa-router");
 const compose = require("koa-compose");
 const bodyParse = require("koa-bodyparser");
-const session = require("koa-session");
+const session = require("koa-session2");
 const koaStatic = require("koa-static");
 const koaViews = require("koa-views");
 const log_1 = require("./util/log");
 const path = require("path");
+const redis_1 = require("./db/redis");
 const proxy_1 = require("./middle/proxy");
 require("./controllers");
 const decorators_1 = require("./router/decorators");
@@ -87,16 +88,9 @@ app.on('error', (err, ctx) => {
     log_1.log_date.error(err.message);
 });
 app.keys = ['jia mi a'];
-const sessionConfig = {
-    key: 'koa:sess',
-    maxAge: 86400000,
-    overwrite: true,
-    httpOnly: true,
-    signed: true,
-    rolling: false,
-    renew: false
-};
-app.use(session(sessionConfig, app));
+app.use(session({
+    store: new redis_1.RedisStore()
+}));
 // 模板配置
 app.use(koaViews(path.join(__dirname, '/view'), {
     extension: 'ejs'
